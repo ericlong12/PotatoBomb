@@ -221,7 +221,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   passKey: 61
   hasPotato: 0
-  autoPlayTest: 1
+  autoPlayTest: 0
 --- !u!1 &173984720
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,7 +321,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   passKey: 49
   hasPotato: 0
-  autoPlayTest: 1
+  autoPlayTest: 0
 --- !u!1 &198983769
 GameObject:
   m_ObjectHideFlags: 0
@@ -421,7 +421,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   passKey: 97
   hasPotato: 0
-  autoPlayTest: 1
+  autoPlayTest: 0
 --- !u!1 &574203806
 GameObject:
   m_ObjectHideFlags: 0
@@ -521,7 +521,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   passKey: 109
   hasPotato: 1
-  autoPlayTest: 1
+  autoPlayTest: 0
 --- !u!1 &608792514
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,7 +713,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   passKey: 92
   hasPotato: 0
-  autoPlayTest: 1
+  autoPlayTest: 0
 --- !u!1 &1689652742
 GameObject:
   m_ObjectHideFlags: 0
@@ -813,7 +813,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   passKey: 99
   hasPotato: 0
-  autoPlayTest: 1
+  autoPlayTest: 0
 --- !u!1 &1695614537
 GameObject:
   m_ObjectHideFlags: 0
