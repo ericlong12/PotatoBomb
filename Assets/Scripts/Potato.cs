@@ -40,10 +40,9 @@ public class Potato : MonoBehaviour
         
         //holder.GetComponent<PlayerController>().hasPotato = false; // Remove potato from previous holder
 
-        if (isMoving) return;
+        // if (isMoving && holder == null) return;
 
-        if (holder != null)
-        {
+        if(holder != null) {
             holder.GetComponent<PlayerController>().hasPotato = false; // Remove potato from previous holder
             holder.GetComponent<PlayerController>().canPass = false;
         }
@@ -51,8 +50,7 @@ public class Potato : MonoBehaviour
         holder = newHolder;
 
         holder.GetComponent<PlayerController>().hasPotato = true;
-        //holder.GetComponent<PlayerController>().canPass = true;
-    
+        holder.GetComponent<PlayerController>().canPass = true;
         
         //holder.ReceivePotato();
         // Start moving animation
@@ -76,13 +74,44 @@ public class Potato : MonoBehaviour
 
         transform.position = targetPosition; // Snap to exact position at the end
         isMoving = false;
-        holder.GetComponent<PlayerController>().canPass = true;
+
+        if(holder != null) {
+            holder.GetComponent<PlayerController>().canPass = true;
+        }
     }
 
     private void Explode()
     {
         Debug.Log(holder.name + " has exploded!");
+
+        GameManager.Instance.RemovePlayer(holder);
         Destroy(holder); // Remove the player
-        Destroy(gameObject); // Remove the potato
+
+        // StopAllCoroutines();
+        
+        // Destroy(gameObject); // Remove the potato
+
+        if (GameManager.Instance.GetRemainingPlayers().Count == 1) {
+            StopAllCoroutines();
+            Destroy(gameObject);
+            Debug.Log(GameManager.Instance.GetRemainingPlayers()[0].name + " is the winner!");
+        }
+    
+        // holder = null;
+
+        GameObject newHolder = GameManager.Instance.GetRandomPlayer();
+
+        int[] fixedTimes = { 3, 7 };
+        if (Random.value < 0.5f)
+        {
+            countdown = fixedTimes[Random.Range(0, fixedTimes.Length)];
+        }
+        else
+        {
+            countdown = Random.Range(30f, 60f);
+        }
+
+        SetHolder(newHolder);
+       
     }
 }

@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour
 {
     public KeyCode passKey; // Unique key for each player
     public bool hasPotato = false; // Whether the player is holding a potato
-    private float passCooldown = 5f; // Prevents instant spam passing
+    // private float passCooldown = 5f; // Prevents instant spam passing
     public bool canPass; // Flag to check if passing is allowed
     public bool autoPlayTest = false; // Enable automatic passing (for testing)
 
@@ -55,15 +55,18 @@ public class PlayerController : MonoBehaviour
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         GameObject targetPlayer;
 
+        /*
         do
         {
             targetPlayer = players[Random.Range(0, players.Length)];
         } while (targetPlayer == this.gameObject); // Ensure it doesn't pass to itself
+        */
 
+        targetPlayer = GameManager.Instance.GetRandomPlayer();
+        if(targetPlayer == null) yield break;
         
         potato.SetHolder(targetPlayer);
         
-
         targetPlayer.GetComponent<PlayerController>().ReceivePotato();
         
         yield return new WaitForSeconds(0.3f);
