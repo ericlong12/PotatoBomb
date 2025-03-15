@@ -16,7 +16,7 @@ public class PlayerCountSelector : MonoBehaviour
         playerCountSlider.onValueChanged.AddListener(UpdatePlayerCountDisplay);
     }
 
-    private void UpdatePlayerCountDisplay(float value)
+    public void UpdatePlayerCountDisplay(float value)
     {
         int playerCount = Mathf.RoundToInt(value);
         playerCountText.text = playerCount + " Players";

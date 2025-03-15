@@ -10,7 +10,9 @@ public class Potato : MonoBehaviour
     public bool isMoving = false;
     private void Start()
     {
-
+        GameObject firstHolder = GameManager.Instance.GetRandomPlayer();
+        transform.position = firstHolder.transform.position;
+        
         // Set a random explosion time: either 3s, 7s, or a random value between 30s-60s
         int[] fixedTimes = { 3, 7 };
         if (Random.value < 0.5f)
