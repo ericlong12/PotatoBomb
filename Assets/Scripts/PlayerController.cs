@@ -25,8 +25,8 @@ public class PlayerController : MonoBehaviour
             canPass = false;
         }
         
-        if (!autoPlayTest && hasPotato && Input.GetKeyDown(passKey) && canPass)
-        {
+        if (!autoPlayTest && Input.GetKeyDown(passKey) && hasPotato &&  canPass)
+        {   
             StartCoroutine(PassPotato());
         }
     }
@@ -57,7 +57,6 @@ public class PlayerController : MonoBehaviour
         GameObject targetPlayer;
 
         targetPlayer = GameManager.Instance.GetRandomPlayer();
-        if(targetPlayer == null) yield break;
         
         potato.SetHolder(targetPlayer);
         

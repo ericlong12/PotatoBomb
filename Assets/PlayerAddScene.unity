@@ -392,7 +392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a6ef9f765a8cfb4cb23b14e31620a8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passKey: 61
+  passKey: 49
   hasPotato: 0
   canPass: 0
   autoPlayTest: 0
@@ -493,7 +493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a6ef9f765a8cfb4cb23b14e31620a8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passKey: 49
+  passKey: 97
   hasPotato: 0
   canPass: 0
   autoPlayTest: 0
@@ -594,7 +594,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a6ef9f765a8cfb4cb23b14e31620a8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passKey: 97
+  passKey: 99
   hasPotato: 0
   canPass: 0
   autoPlayTest: 0
@@ -1013,7 +1013,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a6ef9f765a8cfb4cb23b14e31620a8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passKey: 109
+  passKey: 61
   hasPotato: 1
   canPass: 0
   autoPlayTest: 0
@@ -2181,7 +2181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a6ef9f765a8cfb4cb23b14e31620a8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passKey: 99
+  passKey: 109
   hasPotato: 0
   canPass: 0
   autoPlayTest: 0

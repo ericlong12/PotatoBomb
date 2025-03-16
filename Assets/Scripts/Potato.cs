@@ -6,11 +6,13 @@ public class Potato : MonoBehaviour
     public float countdown;
     private GameObject holder;
     public float passSpeed = 5f; // Adjust for smoother animation
-
     public bool isMoving = false;
+
     private void Start()
     {
         GameObject firstHolder = GameManager.Instance.GetRandomPlayer();
+        firstHolder.GetComponent<PlayerController>().hasPotato = true;
+        firstHolder.GetComponent<PlayerController>().canPass = true;
         transform.position = firstHolder.transform.position;
         
         // Set a random explosion time: either 3s, 7s, or a random value between 30s-60s
@@ -81,7 +83,7 @@ public class Potato : MonoBehaviour
 
         GameManager.Instance.RemovePlayer(holder);
         
-        string playerNum = holder.name.Substring(holder.name.Length - 1);
+        string playerNum = holder.name.Substring(holder.name.Length - 1); //assumes tag is in format "P[player number]"
         Destroy(holder); // Remove the player
 
         Destroy(GameObject.Find("P" + playerNum));
