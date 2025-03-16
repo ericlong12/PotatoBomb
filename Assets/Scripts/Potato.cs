@@ -39,10 +39,6 @@ public class Potato : MonoBehaviour
 
     public void SetHolder(GameObject newHolder)
     {
-        
-        //holder.GetComponent<PlayerController>().hasPotato = false; // Remove potato from previous holder
-
-        // if (isMoving && holder == null) return;
 
         if(holder != null) {
             holder.GetComponent<PlayerController>().hasPotato = false; // Remove potato from previous holder
@@ -54,7 +50,6 @@ public class Potato : MonoBehaviour
         holder.GetComponent<PlayerController>().hasPotato = true;
         holder.GetComponent<PlayerController>().canPass = true;
         
-        //holder.ReceivePotato();
         // Start moving animation
         StartCoroutine(MoveToNewHolder(holder.transform.position));
     }
@@ -64,8 +59,6 @@ public class Potato : MonoBehaviour
         isMoving = true;
         float elapsedTime = 0f;
         Vector3 startPosition = transform.position;
-
-        // holder.GetComponent<PlayerController>().canPass = false;
 
         while (elapsedTime < 0.3f) // 0.3 seconds duration
         {
@@ -87,19 +80,18 @@ public class Potato : MonoBehaviour
         Debug.Log(holder.name + " has exploded!");
 
         GameManager.Instance.RemovePlayer(holder);
+        
+        string playerNum = holder.name.Substring(holder.name.Length - 1);
         Destroy(holder); // Remove the player
 
-        // StopAllCoroutines();
-        
-        // Destroy(gameObject); // Remove the potato
+        Destroy(GameObject.Find("P" + playerNum));
+
 
         if (GameManager.Instance.GetRemainingPlayers().Count == 1) {
             StopAllCoroutines();
             Destroy(gameObject);
             Debug.Log(GameManager.Instance.GetRemainingPlayers()[0].name + " is the winner!");
         }
-    
-        // holder = null;
 
         GameObject newHolder = GameManager.Instance.GetRandomPlayer();
 

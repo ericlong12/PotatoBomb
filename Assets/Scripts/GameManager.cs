@@ -24,17 +24,14 @@ public class GameManager : MonoBehaviour
     {
         
         players.AddRange(GameObject.FindGameObjectsWithTag("Player"));
-        Debug.Log("array size is " +  players.Count);
-        Debug.Log("player count is " + initialPlayerCount);
 
         if (initialPlayerCount < 6)
         {
             for (int i = players.Count - 1; i >= initialPlayerCount; i--)
             {
-                //string playerToRemove = "Player" + i;
                 Destroy(players[i]);
+                DestroyTag("P" + (i + 1));
                 GameManager.Instance.RemovePlayer(players[i]);
-                // players.Remove(players[i]);
             }
         }
     }
@@ -46,6 +43,12 @@ public class GameManager : MonoBehaviour
             players.Remove(player);
         }
     }
+
+    public void DestroyTag(string tag)
+    {
+        Destroy(GameObject.Find(tag));
+    }
+
 
     public List<GameObject> GetRemainingPlayers()
     {
@@ -64,4 +67,5 @@ public class GameManager : MonoBehaviour
 
         return randomPlayer;
     }
+
 }

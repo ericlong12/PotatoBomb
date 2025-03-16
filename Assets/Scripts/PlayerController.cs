@@ -56,13 +56,6 @@ public class PlayerController : MonoBehaviour
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         GameObject targetPlayer;
 
-        /*
-        do
-        {
-            targetPlayer = players[Random.Range(0, players.Length)];
-        } while (targetPlayer == this.gameObject); // Ensure it doesn't pass to itself
-        */
-
         targetPlayer = GameManager.Instance.GetRandomPlayer();
         if(targetPlayer == null) yield break;
         
@@ -71,8 +64,6 @@ public class PlayerController : MonoBehaviour
         targetPlayer.GetComponent<PlayerController>().ReceivePotato();
         
         yield return new WaitForSeconds(0.3f);
-
-       //yield return new WaitForSeconds(passCooldown); // Delay before the player can pass again
         
         canPass = true;
     }
@@ -80,7 +71,6 @@ public class PlayerController : MonoBehaviour
     public void ReceivePotato()
     {
         hasPotato = true;
-       // yield return new WaitForSeconds(passCooldown);
         canPass = true;
         
         if (autoPlayTest)
