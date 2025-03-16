@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
                 GameManager.Instance.RemovePlayer(players[i]);
             }
         }
+        RearrangePlayers();
     }
 
     public void RemovePlayer(GameObject player)
@@ -68,4 +69,45 @@ public class GameManager : MonoBehaviour
         return randomPlayer;
     }
 
+    public void RearrangePlayers() 
+    { 
+        Vector3 center = Vector3.zero;
+        float radius = 3f;
+
+        if (players.Count == 0)
+        {
+            return;
+        }
+        else if (players.Count == 1)
+        {
+            StartCoroutine(MovePlayers(center, players[0]));
+            players[0].transform.position = center;
+        }
+        else
+        {
+            for (int i = 0; i < players.Count; i++)
+            {
+                float angle = (i * 360f / players.Count) * Mathf.Deg2Rad;
+                Vector3 newPosition = center + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
+                StartCoroutine(MovePlayers(newPosition, players[i]));
+                players[i].transform.position = newPosition;
+            }
+        }
+    }
+
+    private IEnumerator MovePlayers(Vector3 targetPosition, GameObject player)
+    {
+        float elapsedTime = 0f;
+        Vector3 startPosition = player.transform.position;
+
+        while (elapsedTime < 0.3f) // 0.3 seconds duration
+        {
+            player.transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / 0.3f);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        player.transform.position = targetPosition;
+
+    }
 }

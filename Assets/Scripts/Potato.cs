@@ -86,16 +86,13 @@ public class Potato : MonoBehaviour
         string playerNum = holder.name.Substring(holder.name.Length - 1); //assumes tag is in format "P[player number]"
         Destroy(holder); // Remove the player
 
-        Destroy(GameObject.Find("P" + playerNum));
-
+        GameManager.Instance.DestroyTag("P" + playerNum);
 
         if (GameManager.Instance.GetRemainingPlayers().Count == 1) {
             StopAllCoroutines();
             Destroy(gameObject);
             Debug.Log(GameManager.Instance.GetRemainingPlayers()[0].name + " is the winner!");
         }
-
-        GameObject newHolder = GameManager.Instance.GetRandomPlayer();
 
         int[] fixedTimes = { 3, 7 };
         if (Random.value < 0.5f)
@@ -106,8 +103,9 @@ public class Potato : MonoBehaviour
         {
             countdown = Random.Range(30f, 60f);
         }
-
+        
+        GameManager.Instance.RearrangePlayers();
+        GameObject newHolder = GameManager.Instance.GetRandomPlayer();
         SetHolder(newHolder);
-       
     }
 }
