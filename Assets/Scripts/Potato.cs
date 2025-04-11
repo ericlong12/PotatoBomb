@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Potato : MonoBehaviour
 {
+    public float maxCountdown;
     public float countdown;
     private GameObject holder;
     public float passSpeed = 5f; // Adjust for smoother animation
@@ -25,6 +26,8 @@ public class Potato : MonoBehaviour
         {
             countdown = Random.Range(30f, 60f);
         }
+        maxCountdown = countdown;  // Save starting countdown
+
     }
 
     private void Update()

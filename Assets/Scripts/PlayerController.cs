@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour
@@ -8,7 +8,6 @@ public class PlayerController : MonoBehaviour
     // private float passCooldown = 5f; // Prevents instant spam passing
     public bool canPass; // Flag to check if passing is allowed
     public bool autoPlayTest = false; // Enable automatic passing (for testing)
-  
 
     private void Start()
     {
@@ -21,13 +20,25 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if(!hasPotato) {
+        if (!hasPotato)
+        {
             canPass = false;
         }
-        
-        if (!autoPlayTest && Input.GetKeyDown(passKey) && hasPotato &&  canPass)
-        {   
-            StartCoroutine(PassPotato());
+
+        if (!autoPlayTest && Input.GetKeyDown(passKey))
+        {
+            // 🎯 Always trigger the Throw animation when pressing the button
+            Animator animator = GetComponent<Animator>();
+            if (animator != null)
+            {
+                animator.SetTrigger("Throw");
+            }
+
+            // ✅ Only actually pass the potato if you have it and can pass
+            if (hasPotato && canPass)
+            {
+                StartCoroutine(PassPotato());
+            }
         }
     }
 
@@ -45,25 +56,30 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator PassPotato()
     {
-        if(!canPass) yield break;
+        if (!canPass) yield break;
 
         Potato potato = FindObjectOfType<Potato>();
-        if (potato == null || potato.transform.GetComponent<Potato>().isMoving) yield break; // Prevent passing while moving
+        if (potato == null || potato.isMoving) yield break; // Prevent passing while moving
 
         canPass = false;
         hasPotato = false;
 
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        GameObject targetPlayer;
+        // ✨ NEW: Trigger the Throw animation!
+        Animator animator = GetComponent<Animator>();
+        if (animator != null)
+        {
+            animator.SetTrigger("Throw");
+        }
 
-        targetPlayer = GameManager.Instance.GetRandomPlayer();
-        
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        GameObject targetPlayer = GameManager.Instance.GetRandomPlayer();
+
         potato.SetHolder(targetPlayer);
-        
+
         targetPlayer.GetComponent<PlayerController>().ReceivePotato();
-        
+
         yield return new WaitForSeconds(0.3f);
-        
+
         canPass = true;
     }
 
@@ -71,7 +87,7 @@ public class PlayerController : MonoBehaviour
     {
         hasPotato = true;
         canPass = true;
-        
+
         if (autoPlayTest)
         {
             StartCoroutine(AutoPassLoop()); // Restart auto-passing if enabled
