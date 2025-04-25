@@ -47,3 +47,6 @@ TagManager:
   - name: players
     uniqueID: 2159789617
     locked: 0
+  - name: WinForeground
+    uniqueID: 3913014387
+    locked: 0
