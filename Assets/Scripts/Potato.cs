@@ -53,9 +53,9 @@ public class Potato : MonoBehaviour
         float elapsedTime = 0f;
         Vector3 startPosition = transform.position;
 
-        while (elapsedTime < 0.3f) // Smooth move
+        while (elapsedTime < 0.2f) // ⚡ Speed up the travel a little for snappier feeling
         {
-            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / 0.3f);
+            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / 0.2f);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
@@ -106,11 +106,11 @@ public class Potato : MonoBehaviour
         // ✅ 50% chance to explode fast
         if (Random.value < 0.5f)
         {
-            countdown = Random.Range(5f, 7f); // Fast explosion
+            countdown = Random.Range(5f, 12f); // 🔥 Now 5–12 seconds fast round
         }
         else
         {
-            countdown = Random.Range(8f, 12f); // Normal explosion
+            countdown = Random.Range(12f, 28f); // 🔥 Normal round
         }
 
         maxCountdown = countdown;
