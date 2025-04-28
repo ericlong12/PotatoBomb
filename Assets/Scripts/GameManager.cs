@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,21 +8,21 @@ public class GameManager : MonoBehaviour
     private List<GameObject> players = new List<GameObject>();
     public static int initialPlayerCount;
 
-    // Start is called before the first frame update
-
-    public void Awake() {
+    public void Awake()
+    {
         initialPlayerCount = PlayerPrefs.GetInt("PlayerCount");
-        if (Instance == null) {
+        if (Instance == null)
+        {
             Instance = this;
         }
-        else {
+        else
+        {
             Destroy(gameObject);
         }
     }
-    
+
     public void Start()
     {
-        
         players.AddRange(GameObject.FindGameObjectsWithTag("Player"));
 
         if (initialPlayerCount < 6)
@@ -50,7 +50,6 @@ public class GameManager : MonoBehaviour
         Destroy(GameObject.Find(tag));
     }
 
-
     public List<GameObject> GetRemainingPlayers()
     {
         return players;
@@ -59,18 +58,34 @@ public class GameManager : MonoBehaviour
     public GameObject GetRandomPlayer()
     {
         if (players.Count == 0) return null;
-        
+
         GameObject randomPlayer = players[Random.Range(0, players.Count)];
 
-        while(randomPlayer == null) {
+        while (randomPlayer == null)
+        {
             randomPlayer = players[Random.Range(0, players.Count)];
         }
 
         return randomPlayer;
     }
 
-    public void RearrangePlayers() 
-    { 
+    // 🆕 New method: Get random player, EXCLUDING a specific player (the current holder)
+    public GameObject GetRandomPlayerExcluding(GameObject excludePlayer)
+    {
+        if (players.Count == 0) return null;
+
+        List<GameObject> validTargets = new List<GameObject>(players);
+        validTargets.Remove(excludePlayer); // Exclude the current holder
+
+        if (validTargets.Count == 0)
+            return null;
+
+        GameObject randomPlayer = validTargets[Random.Range(0, validTargets.Count)];
+        return randomPlayer;
+    }
+
+    public void RearrangePlayers()
+    {
         Vector3 center = Vector3.zero;
         float radius = 3f;
 
@@ -108,6 +123,5 @@ public class GameManager : MonoBehaviour
         }
 
         player.transform.position = targetPosition;
-
     }
 }

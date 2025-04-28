@@ -1,23 +1,30 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement; // ✅ Needed for scene switching
+using UnityEngine.SceneManagement;
 
 public class Potato : MonoBehaviour
 {
     public float maxCountdown;
     public float countdown;
     private GameObject holder;
-    public float passSpeed = 5f; // Adjust for smoother animation
+    public float passSpeed = 5f;
     public bool isMoving = false;
 
     private void Start()
     {
         GameObject firstHolder = GameManager.Instance.GetRandomPlayer();
-        firstHolder.GetComponent<PlayerController>().hasPotato = true;
-        firstHolder.GetComponent<PlayerController>().canPass = true;
-        transform.position = firstHolder.transform.position;
+        if (firstHolder != null)
+        {
+            firstHolder.GetComponent<PlayerController>().hasPotato = true;
+            firstHolder.GetComponent<PlayerController>().canPass = true;
+            transform.position = firstHolder.transform.position;
+        }
+        else
+        {
+            Debug.LogError("❌ No starting player found!");
+        }
 
-        SetRandomCountdown(); // ✅ Use new countdown setup
+        SetRandomCountdown();
     }
 
     private void Update()
@@ -49,11 +56,13 @@ public class Potato : MonoBehaviour
 
     private IEnumerator MoveToNewHolder(Vector3 targetPosition)
     {
+        Debug.Log("🚀 Potato started moving.");
         isMoving = true;
+
         float elapsedTime = 0f;
         Vector3 startPosition = transform.position;
 
-        while (elapsedTime < 0.2f) // ⚡ Speed up the travel a little for snappier feeling
+        while (elapsedTime < 0.2f)
         {
             transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / 0.2f);
             elapsedTime += Time.deltaTime;
@@ -62,6 +71,7 @@ public class Potato : MonoBehaviour
 
         transform.position = targetPosition;
         isMoving = false;
+        Debug.Log("✅ Potato finished moving.");
 
         if (holder != null)
         {
@@ -71,7 +81,7 @@ public class Potato : MonoBehaviour
 
     private void Explode()
     {
-        Debug.Log(holder.name + " has exploded!");
+        Debug.Log($"{holder.name} has exploded!");
 
         GameManager.Instance.RemovePlayer(holder);
 
@@ -86,16 +96,23 @@ public class Potato : MonoBehaviour
             Destroy(gameObject);
 
             string winnerName = GameManager.Instance.GetRemainingPlayers()[0].name;
-            Debug.Log(winnerName + " is the winner!");
+            Debug.Log($"{winnerName} is the winner!");
 
             PlayerPrefs.SetString("WinnerName", winnerName);
             PlayerPrefs.Save();
 
-            SceneManager.LoadScene("WinScene"); // ✅ Go to WinScene
+            SceneManager.LoadScene("WinScene");
             return;
         }
 
-        SetRandomCountdown(); // ✅ Reset countdown for next round
+        // 🔥 Reset the Green Zone when starting next round
+        TimingBarController timingBar = FindObjectOfType<TimingBarController>();
+        if (timingBar != null)
+        {
+            timingBar.ResetGreenZone();
+        }
+
+        SetRandomCountdown();
         GameManager.Instance.RearrangePlayers();
         GameObject newHolder = GameManager.Instance.GetRandomPlayer();
         SetHolder(newHolder);
@@ -103,14 +120,13 @@ public class Potato : MonoBehaviour
 
     private void SetRandomCountdown()
     {
-        // ✅ 50% chance to explode fast
         if (Random.value < 0.5f)
         {
-            countdown = Random.Range(5f, 12f); // 🔥 Now 5–12 seconds fast round
+            countdown = Random.Range(5f, 12f);
         }
         else
         {
-            countdown = Random.Range(12f, 28f); // 🔥 Normal round
+            countdown = Random.Range(12f, 28f);
         }
 
         maxCountdown = countdown;

@@ -5,12 +5,19 @@ public class PlayerController : MonoBehaviour
 {
     public KeyCode passKey;
     public bool hasPotato = false;
-    public bool canPass;
+    public bool canPass = true;
     public bool autoPlayTest = false;
+
+    private bool bufferedPassInput = false;
+    private float inputBufferTime = 2f; // Longer buffer
+    private float bufferTimer = 0f;
+
+    private TimingBarController timingBar;
 
     private void Start()
     {
-        canPass = true;
+        timingBar = FindObjectOfType<TimingBarController>();
+
         if (autoPlayTest && hasPotato)
         {
             StartCoroutine(AutoPassLoop());
@@ -19,23 +26,54 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (!hasPotato)
+        if (!autoPlayTest)
         {
-            canPass = false;
+            if (Input.GetKeyDown(passKey))
+            {
+                PlayThrowAnimation(); // 🎯 Always play animation immediately!
+
+                if (hasPotato)
+                {
+                    if (timingBar != null && timingBar.IsInGreenZone())
+                    {
+                        BufferPassInput();
+                    }
+                    else
+                    {
+                        Debug.Log("❌ Pressed outside green zone!");
+                    }
+                }
+            }
+
+            if (bufferedPassInput)
+            {
+                bufferTimer -= Time.deltaTime;
+                if (bufferTimer <= 0f)
+                {
+                    bufferedPassInput = false;
+                }
+                else if (hasPotato && canPass)
+                {
+                    StartCoroutine(BufferedPassPotato());
+                    bufferedPassInput = false;
+                }
+            }
         }
+    }
 
-        if (!autoPlayTest && Input.GetKeyDown(passKey))
+    private void BufferPassInput()
+    {
+        bufferedPassInput = true;
+        bufferTimer = inputBufferTime;
+        Debug.Log("📥 Pass input buffered.");
+    }
+
+    private void PlayThrowAnimation()
+    {
+        Animator animator = GetComponent<Animator>();
+        if (animator != null)
         {
-            Animator animator = GetComponent<Animator>();
-            if (animator != null)
-            {
-                animator.SetTrigger("Throw");
-            }
-
-            if (hasPotato && canPass)
-            {
-                StartCoroutine(PassPotato());
-            }
+            animator.SetTrigger("Throw");
         }
     }
 
@@ -44,43 +82,55 @@ public class PlayerController : MonoBehaviour
         while (autoPlayTest)
         {
             yield return new WaitForSeconds(Random.Range(1f, 3f));
-            if (hasPotato)
+            if (hasPotato && canPass)
             {
-                StartCoroutine(PassPotato());
+                StartCoroutine(BufferedPassPotato());
             }
         }
     }
 
-    private IEnumerator PassPotato()
+    private IEnumerator BufferedPassPotato()
     {
-        if (!canPass) yield break;
-
         Potato potato = FindObjectOfType<Potato>();
-        if (potato == null) yield break;
+        if (potato == null)
+        {
+            Debug.Log("❌ No potato found!");
+            yield break;
+        }
 
-        // ✨ FIX: Wait if the potato is still moving
+        Debug.Log("⏳ Waiting for potato to stop moving...");
         while (potato.isMoving)
         {
             yield return null;
+        }
+        Debug.Log("🏁 Potato stopped moving. Executing pass!");
+
+        if (!hasPotato || !canPass)
+        {
+            Debug.Log($"❌ Can't pass anymore. hasPotato: {hasPotato}, canPass: {canPass}");
+            yield break;
         }
 
         canPass = false;
         hasPotato = false;
 
-        Animator animator = GetComponent<Animator>();
-        if (animator != null)
+        GameObject targetPlayer = GameManager.Instance.GetRandomPlayerExcluding(this.gameObject);
+        if (targetPlayer != null)
         {
-            animator.SetTrigger("Throw");
+            potato.SetHolder(targetPlayer);
+
+            PlayerController targetController = targetPlayer.GetComponent<PlayerController>();
+            if (targetController != null)
+            {
+                targetController.ReceivePotato();
+            }
+        }
+        else
+        {
+            Debug.Log("❌ No target player found!");
         }
 
-        GameObject targetPlayer = GameManager.Instance.GetRandomPlayer();
-
-        potato.SetHolder(targetPlayer);
-
-        targetPlayer.GetComponent<PlayerController>().ReceivePotato();
-
         yield return new WaitForSeconds(0.3f);
-
         canPass = true;
     }
 
